@@ -942,6 +942,20 @@ document.addEventListener('DOMContentLoaded', function() {
     updateInvoiceNumber();
     document.getElementById('invoiceDate').textContent = new Date().toLocaleDateString('ar-EG');
 });
+        function updatePage() {
+    updateEmployeeList(); // تحديث قائمة الموظفين
+    updateSalaryDetails(); // تحديث تفاصيل الرواتب
+    updateStats(); // تحديث الإحصائيات
+}
+
+// تحديث الصفحة كل 5 ثوانٍ (5000 مللي ثانية)
+setInterval(updatePage, 1000);
+
+// تحديث الصفحة عند التحميل الأولي
+window.onload = function() {
+    updatePage(); // تحديث الصفحة عند التحميل
+    document.getElementById('expenseDate').valueAsDate = new Date(); // تعيين تاريخ اليوم
+};
     </script>
 </body>
 </html>
