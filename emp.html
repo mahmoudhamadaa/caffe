@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>إدارة المصروفات والموظفين</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* نفس الـ CSS السابق */
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+
+        .card-header i {
+            font-size: 24px;
+            margin-left: 10px;
+            color: #1a73e8;
+        }
+
+        .card-header h2 {
+            color: #333;
+            font-size: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            padding-right: 35px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 3px rgba(26,115,232,0.1);
+            outline: none;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+        }
+
+        .btn-primary {
+            background: #1a73e8;
+        }
+
+        .btn-success {
+            background: #34a853;
+        }
+
+        .btn-danger {
+            background: #ea4335;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .employee-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .employee-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .employee-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .employee-avatar {
+            width: 40px;
+            height: 40px;
+            background: #1a73e8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            opacity: 0.8;
+        }
+
+        .attendance-buttons {
+            display: flex;
+            gap: 10px;
+        }
+           /* Header Styles */
+    .header {
+        background: linear-gradient(135deg, #1a73e8, #0d47a1);
+        color: white;
+        padding: 1rem 0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .header::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        animation: headerShine 3s infinite;
+    }
+
+    @keyframes headerShine {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(50%); }
+    }
+
+    .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .header h1 {
+        margin: 0;
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .header-icon {
+        font-size: 28px;
+        animation: bounceIcon 2s infinite;
+    }
+
+    @keyframes bounceIcon {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+     /* Footer */
+     .footer {
+        background: #2c3e50;
+        color: white;
+        padding: 20px 0;
+        margin-top: auto;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 300%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        animation: footerShine 5s infinite;
+    }
+
+    @keyframes footerShine {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(50%); }
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 0 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .header h1 {
+            font-size: 20px;
+        }
+
+        .form-group {
+            grid-template-columns: 1fr;
+        }
+
+        .invoice-actions {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+    </style>
+</head>
+<body>
+    <header class="header no-print">
+        <div class="header-content">
+            <h1>
+                <i class="fas fa-coffee header-icon"></i>
+                نظام إدارة الكافيه
+            </h1>
+            <div class="header-date" id="currentDate"></div>
+        </div>
+    </header>
+<br>
+    <div class="container">
+        <!-- إضافة مصروف -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-money-bill-wave"></i>
+                <h2>إضافة مصروف جديد</h2>
+            </div>
+            <div class="form-grid">
+                <div class="input-group">
+                    <i class="fas fa-tag"></i>
+                    <input type="text" id="expenseType" placeholder="نوع المصروف">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-coins"></i>
+                    <input type="number" id="expenseAmount" placeholder="المبلغ">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-calendar"></i>
+                    <input type="date" id="expenseDate">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-sticky-note"></i>
+                    <input type="text" id="expenseNotes" placeholder="ملاحظات">
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="addExpense()">
+                <i class="fas fa-plus"></i>
+                إضافة مصروف
+            </button>
+        </div>
+
+        <!-- إضافة موظف -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-user-plus"></i>
+                <h2>إضافة موظف جديد</h2>
+            </div>
+            <div class="form-grid">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="employeeName" placeholder="اسم الموظف">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-money-check-alt"></i>
+                    <input type="number" id="employeeSalary" placeholder="الراتب الشهري">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-briefcase"></i>
+                    <input type="text" id="employeePosition" placeholder="الوظيفة">
+                </div>
+            </div>
+            <button class="btn btn-success" onclick="addEmployee()">
+                <i class="fas fa-plus"></i>
+                إضافة موظف
+            </button>
+        </div>
+
+        <!-- قائمة الموظفين -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-users"></i>
+                <h2>سجل الحضور اليومي</h2>
+            </div>
+            <div class="employee-list" id="employeeList">
+                <!-- سيتم إضافة الموظفين هنا -->
+            </div>
+        </div>
+
+        <!-- تفاصيل الرواتب -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <h2>تفاصيل الرواتب</h2>
+            </div>
+            <div class="employee-list" id="salaryDetails">
+                <!-- سيتم إدراج تفاصيل الرواتب هنا -->
+            </div>
+        </div>
+
+        <!-- الإحصائيات -->
+        <div class="stat-grid">
+            <div class="stat-card">
+                <i class="fas fa-money-bill-trend-up fa-2x mb-2"></i>
+                <h3 id="totalExpenses">0</h3>
+                <p>إجمالي المصروفات</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-users fa-2x mb-2"></i>
+                <h3 id="totalEmployees">0</h3>
+                <p>عدد الموظفين</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-money-check-dollar fa-2x mb-2"></i>
+                <h3 id="totalSalaries">0</h3>
+                <p>إجمالي الرواتب</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-coins fa-2x mb-2"></i>
+                <h3 id="netProfit">0</h3>
+                <p>صافي المكسب</p>
+            </div>
+        </div>
+    </div>
+    <br>
+    <footer class="footer no-print">
+        <div class="footer-content">
+            <p><i class="fas fa-code"></i>  Mahmoud-Hamada</p>
+            <p>جميع الحقوق محفوظة &copy; 2025 - نظام إدارة الكافيه</p>
+        </div>
+    </footer>
+    <script>
+        // تهيئة البيانات
+        let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+        let employees = JSON.parse(localStorage.getItem('employees')) || [];
+        let attendance = JSON.parse(localStorage.getItem('attendance')) || {};
+
+        // إضافة مصروف
+        function addExpense() {
+            const type = document.getElementById('expenseType').value;
+            const amount = parseFloat(document.getElementById('expenseAmount').value);
+            const date = document.getElementById('expenseDate').value;
+            const notes = document.getElementById('expenseNotes').value;
+
+            if (!type || !amount || !date) {
+                alert('برجاء ملء جميع البيانات المطلوبة');
+                return;
+            }
+
+            expenses.push({
+                id: Date.now(),
+                type,
+                amount,
+                date,
+                notes
+            });
+
+            localStorage.setItem('expenses', JSON.stringify(expenses));
+            updateStats();
+            clearExpenseForm();
+        }
+
+        // إضافة موظف
+        function addEmployee() {
+            const name = document.getElementById('employeeName').value;
+            const salary = parseFloat(document.getElementById('employeeSalary').value);
+            const position = document.getElementById('employeePosition').value;
+
+            if (!name || !salary || !position) {
+                alert('برجاء ملء جميع البيانات المطلوبة');
+                return;
+            }
+
+            employees.push({
+                id: Date.now(),
+                name,
+                salary,
+                position
+            });
+
+            localStorage.setItem('employees', JSON.stringify(employees));
+            updateEmployeeList();
+            updateStats();
+            clearEmployeeForm();
+        }
+
+        // تسجيل الحضور
+        function markAttendance(employeeId, status) {
+            const today = new Date().toISOString().split('T')[0];
+            if (!attendance[today]) {
+                attendance[today] = {};
+            }
+            attendance[today][employeeId] = status;
+            localStorage.setItem('attendance', JSON.stringify(attendance));
+            updateEmployeeList();
+        }
+
+        // تحديث قائمة الموظفين
+        function updateEmployeeList() {
+            const list = document.getElementById('employeeList');
+            list.innerHTML = '';
+            const today = new Date().toISOString().split('T')[0];
+
+            employees.forEach(employee => {
+                const status = attendance[today]?.[employee.id] || 'غير مسجل';
+                const card = document.createElement('div');
+                card.className = 'employee-card';
+                card.innerHTML = `
+                    <div class="employee-info">
+                        <div class="employee-avatar">
+                            ${employee.name[0]}
+                        </div>
+                        <div>
+                            <h3>${employee.name}</h3>
+                            <p>${employee.position}</p>
+                        </div>
+                    </div>
+                    <div class="attendance-buttons">
+                        <button class="btn btn-success" onclick="markAttendance(${employee.id}, 'حاضر')">
+                            <i class="fas fa-check"></i>
+                            حاضر
+                        </button>
+                        <button class="btn btn-danger" onclick="markAttendance(${employee.id}, 'غائب')">
+                            <i class="fas fa-times"></i>
+                            غائب
+                        </button>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        // تحديث تفاصيل الرواتب
+        function updateSalaryDetails() {
+            const salaryContainer = document.getElementById('salaryDetails');
+            salaryContainer.innerHTML = '';
+
+            employees.forEach(employee => {
+                const { presentDays, absentDays, totalDays } = calculateAttendance(employee.id);
+                const dailySalary = employee.salary / totalDays;
+                const earnedSalary = Math.round(presentDays * dailySalary);
+
+                const salaryCard = document.createElement('div');
+                salaryCard.className = 'employee-card';
+                salaryCard.innerHTML = `
+                    <div class="employee-info">
+                        <div class="employee-avatar">${employee.name[0]}</div>
+                        <div>
+                            <h3>${employee.name}</h3>
+                            <p>${employee.position}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>${employee.salary.toLocaleString()} جنيه</h3>
+                        <p>الراتب </p>
+                    </div>
+                    <div>
+                        <h3>${earnedSalary.toLocaleString()} جنيه</h3>
+                        <p>المستحق</p>
+                    </div>
+                    <div>
+                        <h3>${presentDays} يوم</h3>
+                        <p> الحضور</p>
+                    </div>
+                    <div>
+                        <h3>${absentDays} يوم</h3>
+                        <p> الغياب</p>
+                    </div>
+                `;
+                salaryContainer.appendChild(salaryCard);
+            });
+        }
+
+        // تحديث الإحصائيات
+       // تحديث الإحصائيات
+function updateStats() {
+    const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+
+    // حساب إجمالي المستحق للموظفين
+    const totalEarnedSalaries = employees.reduce((sum, emp) => {
+        const { presentDays, totalDays } = calculateAttendance(emp.id);
+        const dailySalary = emp.salary / totalDays;
+        const earnedSalary = Math.round(presentDays * dailySalary);
+        return sum + earnedSalary;
+    }, 0);
+
+    const salesData = JSON.parse(localStorage.getItem('salesData')) || {};
+    const totalRevenue = Object.values(salesData).flat().reduce((sum, sale) => sum + sale.total, 0);
+
+    // حساب صافي المكسب بعد خصم المصروفات وإجمالي المستحق
+    const netProfit = totalRevenue - totalExpenses - totalEarnedSalaries;
+
+    document.getElementById('totalExpenses').textContent = totalExpenses.toLocaleString() + ' جنيه';
+    document.getElementById('totalEmployees').textContent = employees.length;
+    document.getElementById('totalSalaries').textContent = totalEarnedSalaries.toLocaleString() + ' جنيه';
+    document.getElementById('netProfit').textContent = netProfit.toLocaleString() + ' جنيه';
+}
+
+        // مسح نماذج الإدخال
+        function clearExpenseForm() {
+            document.getElementById('expenseType').value = '';
+            document.getElementById('expenseAmount').value = '';
+            document.getElementById('expenseNotes').value = '';
+        }
+
+        function clearEmployeeForm() {
+            document.getElementById('employeeName').value = '';
+            document.getElementById('employeeSalary').value = '';
+            document.getElementById('employeePosition').value = '';
+        }
+
+        // تهيئة الصفحة
+        window.onload = function() {
+            updateEmployeeList();
+            updateSalaryDetails();
+            updateStats();
+            document.getElementById('expenseDate').valueAsDate = new Date();
+        };
+        // حساب أيام الحضور والغياب لكل موظف
+function calculateAttendance(employeeId) {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1; // الأشهر تبدأ من 0 لذلك نضيف 1
+    const totalDays = new Date(year, month, 0).getDate(); // عدد أيام الشهر الحالي
+
+    let presentDays = 0, absentDays = 0;
+    
+    for (let day = 1; day <= totalDays; day++) {
+        const dateKey = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+        if (attendance[dateKey] && attendance[dateKey][employeeId]) {
+            if (attendance[dateKey][employeeId] === 'حاضر') {
+                presentDays++;
+            } else if (attendance[dateKey][employeeId] === 'غائب') {
+                absentDays++;
+            }
+        }
+    }
+
+    return { presentDays, absentDays, totalDays };
+}
+// دالة لتحديث الصفحة
+function updatePage() {
+    updateEmployeeList(); // تحديث قائمة الموظفين
+    updateSalaryDetails(); // تحديث تفاصيل الرواتب
+    updateStats(); // تحديث الإحصائيات
+}
+
+// تحديث الصفحة كل 5 ثوانٍ (5000 مللي ثانية)
+setInterval(updatePage, 1000);
+
+// تحديث الصفحة عند التحميل الأولي
+window.onload = function() {
+    updatePage(); // تحديث الصفحة عند التحميل
+    document.getElementById('expenseDate').valueAsDate = new Date(); // تعيين تاريخ اليوم
+};
+    </script>
+</body>
+</html>
